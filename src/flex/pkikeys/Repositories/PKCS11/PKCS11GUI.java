@@ -1,0 +1,369 @@
+/*
+ * lib-flex-pkikeys
+ *
+ * Copyright (C) 2010
+ * Ing. Felix D. Lopez M. - flex.developments@gmail.com
+ * 
+ * Desarrollo apoyado por la Superintendencia de Servicios de Certificación 
+ * Electrónica (SUSCERTE) durante 2010-2014 por:
+ * Ing. Felix D. Lopez M. - flex.developments@gmail.com | flopez@suscerte.gob.ve
+ * Ing. Yessica De Ascencao - yessicadeascencao@gmail.com | ydeascencao@suscerte.gob.ve
+ *
+ * Este programa es software libre; Usted puede usarlo bajo los terminos de la
+ * licencia de software GPL version 2.0 de la Free Software Foundation.
+ *
+ * Este programa se distribuye con la esperanza de que sea util, pero SIN
+ * NINGUNA GARANTIA; tampoco las implicitas garantias de MERCANTILIDAD o
+ * ADECUACION A UN PROPOSITO PARTICULAR.
+ * Consulte la licencia GPL para mas detalles. Usted debe recibir una copia
+ * de la GPL junto con este programa; si no, escriba a la Free Software
+ * Foundation Inc. 51 Franklin Street,5 Piso, Boston, MA 02110-1301, USA.
+ */
+
+package flex.pkikeys.Repositories.PKCS11;
+
+import flex.pkikeys.PKIKeysLogger;
+import flex.pkikeys.Repositories.PKCS11.resources.PKCS11DevicesList;
+import flex.pkikeys.exceptions.ChangeRepositoryTypeException;
+import flex.pkikeys.exceptions.PKIKeysException;
+import flex.pkikeys.exceptions.PKIKeysQuitWinException;
+import flex.helpers.SystemHelper;
+import flex.helpers.exceptions.SystemHelperException;
+import flex.pkikeys.Repositories.PKCS11.resources.PKCS11StringsBundle;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+
+/**
+ * PKCS11GUI
+ * Clase que permite capturar el nombre del dispositivo PKCS#11 del que
+ * se cargarán las llaves y su respectivo driver, desde una interfáz gráfica
+ * basada en Swing.
+ * 
+ * @author Ing. Felix D. Lopez M. - flex.developments@gmail.com
+ * @author Ing. Yessica De Ascencao - yessicadeascencao@gmail.com
+ */
+public final class PKCS11GUI extends javax.swing.JFrame {
+    private ImageIcon image;
+    private LinkedHashMap<String, String> devicesHashMap = null;
+    
+    FileFilter filter = new FileFilter() {
+        
+        @Override
+        public boolean accept(File file) {
+            if (file.isDirectory()) return true;
+            String name = file.getName().toLowerCase();
+            try {
+                if(SystemHelper.isWindows()) return name.endsWith(".dll");
+                else if(SystemHelper.isLinux()) return name.endsWith(".so");
+                
+            } catch (SystemHelperException ex) {}
+            return false;
+        }
+
+        @Override
+        public String getDescription() {
+            try {
+                if(SystemHelper.isWindows()) 
+                    return PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_FILTER_DESCRIPTION_WINDOWS);
+                if(SystemHelper.isLinux()) 
+                    return PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_FILTER_DESCRIPTION_LINUX);
+            } catch (SystemHelperException ex) {}
+            return "";
+        }
+    };
+    
+    /**
+     * Constructor único que inicializa la interfáz gráfica y sus componentes.
+     * @param name
+     * @param library
+     */
+    public PKCS11GUI(String name, String library) {
+        try {
+            if(name==null) name ="";
+            if(library==null) library ="";
+            
+            InputStream imgIS = flex.pkikeys.Repositories.AbstractRepository.class.getResourceAsStream("llaves.png");
+            image = new ImageIcon(ImageIO.read(imgIS));
+            if(devicesHashMap == null)
+                devicesHashMap = new PKCS11DevicesList(name, library);
+            initComponents();
+            
+            //Llenar combo----------------------------------------------------------
+            cmbDevice.removeAllItems();
+            for ( String key : devicesHashMap.keySet() ) cmbDevice.addItem(key);
+            
+            //Seleccionar dispositivo de la configuración previa--------------------
+            if(name.compareTo(PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_LST_TOKEN_NAME_OTHER)) == 0)
+                name = PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_LST_TOKEN_NAME_OTHER) + ".";
+            
+            for (int x=0; x < devicesHashMap.size(); x++) {
+                cmbDevice.setSelectedIndex(x);
+                if( (getName().compareTo(name) == 0) && (getLibrary().compareTo(library) == 0) )
+                    break;
+                else cmbDevice.setSelectedIndex(0);
+            }
+
+            setLocationRelativeTo(null);
+        } catch (IOException ex) {
+            PKIKeysLogger.writeErrorLog(ex);
+        }
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        finder = new javax.swing.JFileChooser();
+        lblImage = new javax.swing.JLabel(image);
+        lblLibrary = new javax.swing.JLabel();
+        txtPath = new javax.swing.JTextField();
+        btnFind = new javax.swing.JButton();
+        lblName = new javax.swing.JLabel();
+        cmbDevice = new javax.swing.JComboBox();
+
+        finder.setFileFilter(filter);
+        finder.setToolTipText(PKCS11StringsBundle.get("I_PKCS11_FILTER_TT"));
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(PKCS11StringsBundle.get("I_PKCS11_TITLE"));
+        setBackground(new java.awt.Color(254, 254, 254));
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
+
+        lblImage.setText("");
+
+        lblLibrary.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        lblLibrary.setText(PKCS11StringsBundle.get("I_PKCS11_L_TOKEN_NAME"));
+
+        txtPath.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        txtPath.setEnabled(false);
+        txtPath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPathActionPerformed(evt);
+            }
+        });
+
+        btnFind.setText("...");
+        btnFind.setEnabled(false);
+        btnFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindActionPerformed(evt);
+            }
+        });
+
+        lblName.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        lblName.setText(PKCS11StringsBundle.get("I_PKCS11_L_TOKEN_DRIVER_PATH"));
+
+        cmbDevice.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        cmbDevice.setModel(new javax.swing.DefaultComboBoxModel());
+        cmbDevice.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbDeviceItemStateChanged(evt);
+            }
+        });
+        cmbDevice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbDeviceActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbDevice, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLibrary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(txtPath))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblImage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblLibrary)
+                    .addComponent(lblName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbDevice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    }//GEN-LAST:event_formWindowOpened
+
+    private void txtPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPathActionPerformed
+}//GEN-LAST:event_txtPathActionPerformed
+
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+        // TODO add your handling code here:
+        if (finder.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String selected = finder.getSelectedFile().getAbsolutePath();
+            txtPath.setText(selected);
+        }
+}//GEN-LAST:event_btnFindActionPerformed
+    
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    private void cmbDeviceItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbDeviceItemStateChanged
+
+    }//GEN-LAST:event_cmbDeviceItemStateChanged
+    
+    /**
+     * Se presiona el botón "Aceptar".
+     *
+     * @param Evento en el que se presiona el botón "Aceptar".
+     */
+    private void cmbDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDeviceActionPerformed
+        //Al seleccionar otro item
+        txtPath.setText(devicesHashMap.get(cmbDevice.getSelectedItem().toString()));
+        
+        if(
+            (cmbDevice.getSelectedIndex() < cmbDevice.getItemCount()-1) &&
+            (cmbDevice.getSelectedIndex() >= 0)
+        ){
+            cmbDevice.setEditable(false);
+            txtPath.setEnabled(false);
+            btnFind.setEnabled(false);
+        } else {
+            cmbDevice.setEditable(true);
+            txtPath.setEnabled(true);
+            btnFind.setEnabled(true);
+        }
+    }//GEN-LAST:event_cmbDeviceActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFind;
+    private javax.swing.JComboBox cmbDevice;
+    private javax.swing.JFileChooser finder;
+    private javax.swing.JLabel lblImage;
+    private javax.swing.JLabel lblLibrary;
+    private javax.swing.JLabel lblName;
+    private javax.swing.JTextField txtPath;
+    // End of variables declaration//GEN-END:variables
+
+    /**
+     * Obtener nombre del dispositivo
+     * 
+     * @return Retorna un String con el nombre del dispositivo PKCS#11
+     */
+    @Override
+    public String getName() {
+        return cmbDevice.getSelectedItem().toString();
+    }
+
+    /**
+     * Obtener Ruta.
+     *
+     * @return Retorna un String con la ruta de ubicación del driver.
+     */
+    public String getLibrary() {
+        return txtPath.getText();
+    }
+
+    /**
+     * Métido para mostrar un diálogo de error con el mensaje indicado.
+     *
+     * @param message que se desea mostrar en el cuadro de diálogo.
+     */
+    public void errorMessage(String message) {
+        JOptionPane.showOptionDialog(null,
+                message,
+                this.getTitle() + PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_TITLE_SUFIX_ERROR),
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.ERROR_MESSAGE,
+                null,
+                null,
+                null
+        );
+        cmbDevice.requestFocus();
+    }
+
+    private int showModalWin() {
+        return JOptionPane.showOptionDialog(null,
+              this.getContentPane(),
+              this.getTitle(),
+              JOptionPane.OK_CANCEL_OPTION,
+              JOptionPane.DEFAULT_OPTION,
+              null,
+              new Object[] {
+                  PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_B_ACCEPT), 
+                  PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_B_CANCEL), 
+                  PKCS11StringsBundle.get(PKCS11StringsBundle.I_PKCS11_B_CHANGE) 
+              },
+              null);
+    }
+
+    public void getConfiguration() throws PKIKeysException, ChangeRepositoryTypeException {
+        switch (showModalWin()) {
+            case JOptionPane.OK_OPTION:{ //Aceptar
+                boolean error = false;
+                
+                if(getName().isEmpty()) {
+                    errorMessage(PKCS11StringsBundle.get(PKCS11StringsBundle.M_ERROR_PKCS11_TOKEN_NO_NAME));
+                    error = true;
+                    cmbDevice.requestFocus();
+                }
+                
+                if( (getLibrary().isEmpty()) && (!error) ) {
+                    errorMessage(PKCS11StringsBundle.get(PKCS11StringsBundle.M_ERROR_PKCS11_TOKEN_DRIVER_NO_PATH));
+                    error = true;
+                    txtPath.requestFocus();
+                }
+                
+                if(error) getConfiguration();
+                break;
+            }
+                
+            case 2: { //Volver
+                throw new ChangeRepositoryTypeException();
+            }
+                
+            default: { //Cancelar
+                throw new PKIKeysException(new PKIKeysQuitWinException());
+            }
+        }
+    }
+}
