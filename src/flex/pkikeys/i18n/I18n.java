@@ -7,7 +7,6 @@
  * Desarrollo apoyado por la Superintendencia de Servicios de Certificación 
  * Electrónica (SUSCERTE) durante 2010-2014 por:
  * Ing. Felix D. Lopez M. - flex.developments@gmail.com | flopez@suscerte.gob.ve
- * Ing. Yessica De Ascencao - yessicadeascencao@gmail.com | ydeascencao@suscerte.gob.ve
  *
  * Este programa es software libre; Usted puede usarlo bajo los terminos de la
  * licencia de software GPL version 2.0 de la Free Software Foundation.

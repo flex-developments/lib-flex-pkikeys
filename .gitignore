@@ -2,3 +2,5 @@
 /lib/CopyLibs/
 /build.xml
 /nbproject/
+/build/
+/dist/
