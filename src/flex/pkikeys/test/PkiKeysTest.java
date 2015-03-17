@@ -1,5 +1,5 @@
 /*
- * testproject
+ * lib-flex-pkikeys
  *
  * Copyright (C) 2010
  * Ing. Felix D. Lopez M. - flex.developments@gmail.com
