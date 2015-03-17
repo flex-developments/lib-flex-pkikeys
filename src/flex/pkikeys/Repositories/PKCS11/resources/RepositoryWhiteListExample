@@ -1,7 +1,7 @@
 # lib-flex-pkikeys
 # 
 # Copyright (C) 2014
-# Ing. Felix D. Lopez M. - flex.developments@gmail.com
+# Ing. Felix D. Lopez M. - flex.developments en gmail
 # La primera línea debe indicar el algoritmo de hash con el fueron generados los 
 # hash de los drivers. Los valores pueden ser: SHA-1, SHA-256, SHA-384 ó SHA-512
 
