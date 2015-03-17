@@ -23,14 +23,14 @@
 package flex.pkikeys.test;
 
 import flex.pkikeys.PKIKeys;
-import static flex.pkikeys.test.TestsResources.getKeys;
 import java.security.Signature;
 
 /**
  * PkiKeysTest
  * 
- * @author Ing. Felix D. Lopez M. - flex.developments@gmail.com | flopez@suscerte.gob.ve
- * @author Ing. Yessica De Ascencao - yessicadeascencao@gmail.com | ydeascencao@suscerte.gob.ve
+ * @author Ing. Felix D. Lopez M. - flex.developments@gmail.com
+ * @author Ing. Yessica De Ascencao - yessicadeascencao@gmail.com
+ * @version 1.0
  */
 public class PkiKeysTest {
     

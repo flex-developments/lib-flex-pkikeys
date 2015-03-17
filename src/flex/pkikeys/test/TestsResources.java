@@ -33,8 +33,9 @@ import java.io.File;
 /**
  * TestsResources
  * 
- * @author Ing. Felix D. Lopez M. - flex.developments@gmail.com | flopez@suscerte.gob.ve
- * @author Ing. Yessica De Ascencao - yessicadeascencao@gmail.com | ydeascencao@suscerte.gob.ve
+ * @author Ing. Felix D. Lopez M. - flex.developments@gmail.com
+ * @author Ing. Yessica De Ascencao - yessicadeascencao@gmail.com
+ * @version 1.0
  */
 public class TestsResources {
     public static String resourcesPath = System.getProperty("user.home") + File.separator + "resources" + File.separator;
