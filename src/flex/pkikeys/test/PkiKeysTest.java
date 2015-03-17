@@ -22,12 +22,8 @@
 
 package flex.pkikeys.test;
 
-import flex.helpers.SystemHelper;
-import flex.helpers.exceptions.SystemHelperException;
 import flex.pkikeys.PKIKeys;
-import flex.pkikeys.Repositories.AbstractRepositoryConfiguration;
-import flex.pkikeys.Repositories.RepositoriesWhiteList;
-import flex.pkikeys.Repositories.RepositoryConfigurationFactory;
+import static flex.pkikeys.test.TestsResources.getKeys;
 import java.security.Signature;
 
 /**
@@ -48,7 +44,7 @@ public class PkiKeysTest {
     private static void probarFirmarString() {
         try {
             String data = "test";
-            PKIKeys keys = getKeys(true, false, true);
+            PKIKeys keys = TestsResources.getKeys(true, false, true);
             
             Signature signature = Signature.getInstance("SHA1withRSA");
             signature.initSign(keys.getPrivateKey());
@@ -60,52 +56,5 @@ public class PkiKeysTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    private static PKIKeys getKeys(
-            boolean loadRepositoryConfiguration, 
-            boolean verifyRepositoryIntegrity,
-            boolean loadFromGUI
-    ) throws Exception {
-        PKIKeys clientKeys = null;
-        String conf = null;
-        
-        if(loadRepositoryConfiguration) conf = getEncodedRepositoryConfiguration();
-        
-        if(conf != null) {
-            AbstractRepositoryConfiguration repositoryConfiguration = RepositoryConfigurationFactory.getInstanceFromEncodedConf(conf);
-            clientKeys = new PKIKeys(repositoryConfiguration);
-            System.out.println("Configuration inicial <" + clientKeys.getRepositoryConfiguration().getConfigurationEncode() + ">");
-            
-        } else {
-            clientKeys = new PKIKeys();
-        }
-        
-        if(loadFromGUI) clientKeys.loadFromGUI();
-        
-        else clientKeys.loadFromConsole();
-        
-        if (verifyRepositoryIntegrity) {
-            RepositoriesWhiteList whiteList = new RepositoriesWhiteList("SHA-256");
-            //c1-2.p12
-            whiteList.add("788a48e355ec3be4cbef23a268e493ac00c7244f4d04077c899d1da1e889de7e");
-            //c2-2.p12
-            whiteList.add("69958331515f639e690725026d06e2fcc5263091b1987f1e09a9a05369d69585");
-            clientKeys.setVerifyRepositoryIntegrity(verifyRepositoryIntegrity);
-            clientKeys.setWitheListRepositories(whiteList);
-        }
-        
-        //Cargar y retornar las llaves
-        clientKeys.loadKeys(null);
-        return clientKeys;
-    }
-    
-    private static String getEncodedRepositoryConfiguration() throws SystemHelperException {
-        if(SystemHelper.isWindows())
-            return "dHlwZT1QS0NTMTIKcGF0aD1DOlxVc2Vyc1xBUkFHT05ccmVzb3VyY2VzXGMyLTIucDEy";
-        else 
-            //return "dHlwZT1QS0NTMTIKcGF0aD0vaG9tZS9mbG9wZXovcmVzb3VyY2VzL2MxLTIucDEy";
-            return "dHlwZT1QS0NTMTEKbmFtZT1PdHJvCnBhdGg9L29wdC9lcGFzczMwMDBfUFNDL3JlZGlzdC9saWJz\n" +
-                    "aHV0dGxlX3AxMXYyMjBfcHNjLnNv";
     }
 }
