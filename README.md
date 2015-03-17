@@ -1,6 +1,11 @@
 # lib-flex-pkikeys
 Librería que permite acceso a diferentes tipos de KeyStore, antes de acceder a las llaves se puede establecer una lista blanca para filtrar los KeyStores y habilitar la verificación de los KeyStores contra dicha lista.
 
+Dependencias:
+ * lib-flex-helpers v010
+   * commons-net-3.1
+   * mail
+
 Copyright (C) 2010
 Ing. Felix D. Lopez M. - flex.developments@gmail.com
 
