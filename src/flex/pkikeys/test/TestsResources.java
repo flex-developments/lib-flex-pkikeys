@@ -40,6 +40,15 @@ import java.io.File;
 public class TestsResources {
     public static String resourcesPath = System.getProperty("user.home") + File.separator + "resources" + File.separator;
     
+    public static String getEncodedRepositoryConfiguration() throws SystemHelperException {
+        if(SystemHelper.isWindows())
+            return "dHlwZT1QS0NTMTIKcGF0aD1DOlxVc2Vyc1xBUkFHT05ccmVzb3VyY2VzXGMyLTIucDEy";
+        else 
+            //return "dHlwZT1QS0NTMTIKcGF0aD0vaG9tZS9mbG9wZXovcmVzb3VyY2VzL2MxLTIucDEy";
+            return "dHlwZT1QS0NTMTEKbmFtZT1PdHJvCnBhdGg9L29wdC9lcGFzczMwMDBfUFNDL3JlZGlzdC9saWJz\n" +
+                    "aHV0dGxlX3AxMXYyMjBfcHNjLnNv";
+    }
+    
     public static PKIKeys getKeys(
             boolean loadRepositoryConfiguration, 
             boolean verifyRepositoryIntegrity,
@@ -76,14 +85,5 @@ public class TestsResources {
         //Cargar y retornar las llaves
         clientKeys.loadKeys(null);
         return clientKeys;
-    }
-    
-    public static String getEncodedRepositoryConfiguration() throws SystemHelperException {
-        if(SystemHelper.isWindows())
-            return "dHlwZT1QS0NTMTIKcGF0aD1DOlxVc2Vyc1xBUkFHT05ccmVzb3VyY2VzXGMyLTIucDEy";
-        else 
-            //return "dHlwZT1QS0NTMTIKcGF0aD0vaG9tZS9mbG9wZXovcmVzb3VyY2VzL2MxLTIucDEy";
-            return "dHlwZT1QS0NTMTEKbmFtZT1PdHJvCnBhdGg9L29wdC9lcGFzczMwMDBfUFNDL3JlZGlzdC9saWJz\n" +
-                    "aHV0dGxlX3AxMXYyMjBfcHNjLnNv";
     }
 }
