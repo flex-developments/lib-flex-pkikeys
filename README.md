@@ -2,7 +2,7 @@
 Librería que permite acceso a diferentes tipos de KeyStore, antes de acceder a las llaves permite establecer una lista blanca que filtre KeyStores dentro de la lista de confianza.
 
 ## Dependencias
- * lib-flex-helpers v010
+ * lib-flex-helpers v020
    * commons-net-3.3 (http://commons.apache.org/proper/commons-net/download_net.cgi)
    * javax.mail  (https://java.net/projects/javamail/pages/Home)
 
